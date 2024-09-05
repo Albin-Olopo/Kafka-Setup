@@ -1,27 +1,41 @@
-# Kafka Setup
+## About the Project
 
-This repository contains scripts and configurations to set up Apache Kafka for development and production environments. The setup includes Kafka brokers, ZooKeeper, and example configuration files.
+KafkaJS is a modern Apache Kafka client for Node.js. It is compatible with Kafka 0.10+ and offers native support for 0.11 features.
 
-## Table of Contents
+KAFKA is a registered trademark of The Apache Software Foundation and has been licensed for use by KafkaJS. KafkaJS has no affiliation with and is not endorsed by The Apache Software Foundation.
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Contact](#contact)
+This project is a Node.js application designed to interact with an Apache Kafka cluster. It leverages the kafkajs library for Kafka integration and the express framework to build a web server. The application includes functionalities for sending messages to Kafka topics and continuously generating data for a specific topic.
 
+## Key Features:
+1. Express-Based REST API:
 
-## Prerequisites
+Provides an endpoint to send messages to a Kafka topic.
+Endpoint: POST /producer/purchase
+Expects JSON payload with topic and data fields.
+Converts the data to a JSON string and sends it to the specified Kafka topic.
 
-Before you begin, ensure you have met the following requirements:
+2. Kafka Producer:
 
-- **Java**: Kafka requires Java 8 or later.
-- **Docker** (optional): For using Docker-based setups.
-- **Docker Compose** (optional): For using Docker Compose-based setups.
+Establishes a connection to a Kafka cluster with multiple brokers.
+Sends messages to Kafka topics based on requests from the API.
 
-## Installation
+3. Automated Message Production:
 
-### Using Docker
+Periodically sends messages to a Kafka topic (Topic1) every 3 seconds.
+Generates random user data and prices to simulate continuous data flow.
 
+4. Graceful Initialization and Error Handling:
+
+Connects the Kafka producer at startup.
+Handles connection errors and logs messages for troubleshooting.
+
+## Usage Instructions:
+Prerequisites:
+
+Ensure Kafka is running and accessible at localhost:9092, localhost:9093, and localhost:9094.
+Install Node.js and npm.
+
+ ## Setup
 1. Clone the repository:
    ```sh
    git clone https://github.com/Albin-Olopo/Kafka-Setup.git
@@ -33,58 +47,40 @@ docker-compose up
 ```
 This will start ZooKeeper and Kafka brokers based on the configurations provided in docker-compose.yml.
 
-## Manual Installation
-1. Clone the repository:
-
+3. Install dependencies:
 ```sh
-git clone https://github.com/Albin-Olopo/Kafka-Setup.git
-cd Kafka-Setup
+    npm install
 ```
+4. Run the Application:
 
-2. Install Kafka and ZooKeeper manually by following the instructions in the respective directories.
+Start the server:
 
-## Configuration
-The configuration files are located in the ```config```directory:
+  `node index.js`
 
-```server.properties```: Configuration file for Kafka brokers.
+The server will run on port 3000 by default. You can change the port by setting the PORT environment variable.
 
-```zookeeper.properties```: Configuration file for ZooKeeper.
+4. API Endpoints:
 
-Adjust these files as necessary for your environment.
+  Send Message:
 
-## Usage
-## Docker
-To list Kafka topics:
+    `POST /producer/purchase`
 
-```sh
-docker exec -it kafka-container-name kafka-topics.sh --list --zookeeper zookeeper-container-name:2181
+Request Body:
+```JSON
+{
+  "topic": "your-topic-name",
+  "data": {
+    "key": "value"
+  }
+}
 ```
-To create a new Kafka topic:
+5. Automated Data Generation:
 
-```sh
-docker exec -it kafka-container-name kafka-topics.sh --create --zookeeper zookeeper-container-name:2181 --replication-factor 1 --partitions 1 --topic your-topic-name
-```
-## Manual
-Start ZooKeeper:
+The server will automatically send messages to Topic1 every 3 seconds.
 
-```sh
-zookeeper-server-start.sh config/zookeeper.properties
-```
-Start Kafka Broker:
-
-```sh
-kafka-server-start.sh config/server.properties
-```
-List Kafka topics:
-
-```sh
-kafka-topics.sh --list --zookeeper localhost:2181
-```
-Create a new Kafka topic:
-
-```sh
-kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic your-topic-name
-```
+## Error Handling:
+Logs errors to the console for both Kafka connection issues and message sending problems.
+This application provides a simple interface for producing messages to Kafka and simulating a continuous stream of data, useful for testing and development purposes in Kafka-based systems.
 
 ## Contact
 For questions or support, please open an issue or contact albin.alex@olopo.app.
